@@ -134,6 +134,10 @@ Uses [PyInstaller](https://pyinstaller.org/) in single-file mode.
 
 ---
 
+## Author
+
+Made by **Dorian Bannier** — contributions and feedback welcome.
+
 ## License
 
 MIT — free to use, modify and distribute.
