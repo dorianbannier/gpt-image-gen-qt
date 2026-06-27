@@ -125,10 +125,61 @@ Uses [PyInstaller](https://pyinstaller.org/) in single-file mode.
 
 ---
 
+## MCP Server (Claude Code integration)
+
+The project includes an MCP server (`mcp_server.py`) that exposes the image generation as a tool directly inside Claude Code — no browser, no copy-paste.
+
+### Setup
+
+**1. Install dependencies** (once):
+
+```bash
+pip install mcp openai
+```
+
+**2. Register the server** in `~/.claude/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "gpt-image-gen": {
+      "command": "python3",
+      "args": ["/absolute/path/to/gpt-image-gen-qt/mcp_server.py"]
+    }
+  }
+}
+```
+
+**3. Restart Claude Code** — it will detect the new server automatically.
+
+> The API key is read from `~/.config/gpt-image-gen/config.json` (the same file used by the desktop app). Set it once in the app, and the MCP server picks it up with no extra configuration.
+
+### Usage
+
+Once connected, just ask Claude to generate an image:
+
+```
+Generate an image of a fox in a snowy forest, high quality
+```
+
+Generated images are saved to `~/Images/gpt-image-gen/` and the file path is returned.
+
+### Tool parameters
+
+| Parameter | Options | Default |
+|-----------|---------|---------|
+| `prompt` | Any text | *(required)* |
+| `model` | `gpt-image-2`, `dall-e-3` | `gpt-image-2` |
+| `quality` | gpt-image-2: `auto` `low` `medium` `high` — dall-e-3: `standard` `hd` | `auto` |
+| `format` | `png`, `jpeg`, `webp` *(gpt-image-2 only)* | `png` |
+
+---
+
 ## Tech Stack
 
 - [PyQt6](https://pypi.org/project/PyQt6/) — cross-platform GUI framework
 - [openai](https://pypi.org/project/openai/) — official OpenAI Python client
+- [mcp](https://pypi.org/project/mcp/) — MCP server SDK (Claude Code integration)
 - [PyInstaller](https://pyinstaller.org/) — Windows & macOS packaging
 - [GitHub Actions](https://github.com/features/actions) — CI/CD
 
