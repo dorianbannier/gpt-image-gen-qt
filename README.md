@@ -1,6 +1,6 @@
 # GPT Image Generator
 
-A cross-platform image generation app powered by the OpenAI API (`gpt-image-2`), built with PyQt6 and designed to run on **Windows, macOS and Linux**.
+A cross-platform image generation app powered by the OpenAI API (`gpt-image-2`), built with PyQt6 and designed to run on **Windows and Linux** (macOS build available but untested).
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python&logoColor=white)
 ![PyQt6](https://img.shields.io/badge/PyQt6-6.5+-green?logo=qt&logoColor=white)
@@ -30,11 +30,17 @@ A cross-platform image generation app powered by the OpenAI API (`gpt-image-2`),
 
 ### Windows
 
-Download the latest `.exe` from the [Releases](../../releases) page or the [Actions](../../actions) tab → latest successful build → **Artifacts**.
+Download the latest `.exe` from the [Releases](../../releases) page.
 
 No installation required — just double-click `GPT-Image-Generator.exe`.
 
-### Linux / macOS
+### macOS *(untested)*
+
+Download `GPT-Image-Generator-macOS.zip` from the [Releases](../../releases) page, unzip it and move `GPT-Image-Generator.app` to your Applications folder.
+
+> macOS builds are generated automatically but have not been tested on a real Mac. Feedback welcome.
+
+### Linux
 
 **Requirements**: Python 3.11+
 
