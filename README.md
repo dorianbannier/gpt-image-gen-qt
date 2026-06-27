@@ -19,7 +19,7 @@ GPT Image Generator is a lightweight desktop application that lets you generate 
 - Anyone who wants to use gpt-image-2 without the OpenAI web interface
 - Designers and creatives who generate images as part of their workflow
 - Developers testing prompts before integrating them into their apps
-- Users who want a simple, privacy-friendly alternative to Midjourney or Adobe Firefly
+- Users who want a simple alternative to Midjourney or Adobe Firefly without creating yet another account
 
 ---
 
