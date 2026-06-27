@@ -1,0 +1,43 @@
+name: Build Windows .exe
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:          # lancement manuel depuis GitHub
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install PyQt6 openai pyinstaller pillow
+
+      - name: Convert PNG → ICO
+        run: |
+          python - <<'EOF'
+          from PIL import Image
+          img = Image.open("icone.png").convert("RGBA")
+          img.save("icone.ico", format="ICO",
+                   sizes=[(256,256),(128,128),(64,64),(48,48),(32,32),(16,16)])
+          EOF
+        shell: bash
+
+      - name: Build with PyInstaller
+        run: pyinstaller gpt-image-gen.spec
+
+      - name: Upload .exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: GPT-Image-Generator-Windows
+          path: dist/GPT-Image-Generator.exe
+          retention-days: 30
