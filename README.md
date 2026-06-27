@@ -22,7 +22,7 @@ Application de génération d'images via l'API OpenAI (`gpt-image-2`), construit
 
 ## Captures d'écran
 
-> *À venir*
+![Aperçu de l'application](screenshots/apercu.png)
 
 ---
 
