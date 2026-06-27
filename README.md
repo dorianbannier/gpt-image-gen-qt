@@ -15,7 +15,7 @@ A cross-platform image generation app powered by the OpenAI API (`gpt-image-2`),
 - **Adjustable parameters**: size, quality, format (PNG / JPEG / WebP), background (transparent / opaque)
 - **Save** the generated image in the chosen format
 - **API key** stored locally (`~/.config/gpt-image-gen/config.json`), never shared
-- **Bilingual interface** — French / English, preference saved between sessions
+- **Bilingual interface** — English by default, French available via the toolbar toggle
 - **macOS-inspired design**: clean light theme modelled after native Apple applications
 
 ---
@@ -68,10 +68,8 @@ You can get a key at [platform.openai.com/api-keys](https://platform.openai.com/
 
 | Parameter | Options | Description |
 |-----------|---------|-------------|
-| **Size** | auto, 1024×1024, 1536×1024, 1024×1536 | Output image resolution |
 | **Quality** | auto, low, medium, high | Speed / quality trade-off |
 | **Format** | PNG, JPEG, WebP | Output file format |
-| **Background** | auto, transparent, opaque | Alpha channel (PNG/WebP only) |
 
 ---
 
