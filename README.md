@@ -1,12 +1,12 @@
 # GPT Image Generator
 
-A free, open-source desktop app to generate images using the **OpenAI gpt-image-2 API** — no subscription required, just your API key.
+A free, open-source desktop app to generate images using the **OpenAI API** (`gpt-image-2` and `dall-e-3`) — no subscription required, just your API key.
 
 Built with PyQt6, runs on **Windows and Linux** (macOS build available but untested).
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python&logoColor=white)
 ![PyQt6](https://img.shields.io/badge/PyQt6-6.5+-green?logo=qt&logoColor=white)
-![OpenAI](https://img.shields.io/badge/OpenAI-gpt--image--2-412991?logo=openai&logoColor=white)
+![OpenAI](https://img.shields.io/badge/OpenAI-gpt--image--2%20%7C%20dall--e--3-412991?logo=openai&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-orange)
 
 ---
@@ -31,8 +31,10 @@ GPT Image Generator is a lightweight desktop application that lets you generate 
 
 ## Features
 
-- **Text-to-image generation** using OpenAI `gpt-image-2`
-- **Quality and format control**: low / medium / high quality, PNG / JPEG / WebP output
+- **Text-to-image generation** using OpenAI `gpt-image-2` (default) or `dall-e-3`
+- **Quality and format control**: adapts automatically to the selected model
+  - *gpt-image-2*: auto / low / medium / high quality — PNG / JPEG / WebP
+  - *dall-e-3*: standard / hd quality — PNG
 - **One-click save** of the generated image
 - **API key stored locally** (`~/.config/gpt-image-gen/config.json`) — never sent anywhere else
 - **Bilingual**: English by default, French available via toolbar toggle
@@ -88,10 +90,18 @@ Your key is saved locally and never transmitted to anyone other than OpenAI.
 
 ## Generation Parameters
 
+### gpt-image-2 (default)
+
 | Parameter | Options | Description |
 |-----------|---------|-------------|
 | **Quality** | auto, low, medium, high | Speed / quality trade-off |
 | **Format** | PNG, JPEG, WebP | Output file format |
+
+### dall-e-3
+
+| Parameter | Options | Description |
+|-----------|---------|-------------|
+| **Quality** | standard, hd | Standard or high definition |
 
 ---
 

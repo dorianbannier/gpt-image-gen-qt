@@ -17,8 +17,10 @@ from PyQt6.QtWidgets import QGraphicsDropShadowEffect
 CONFIG_DIR  = Path.home() / ".config" / "gpt-image-gen"
 CONFIG_FILE = CONFIG_DIR / "config.json"
 
-QUALITIES   = ["auto", "low", "medium", "high"]
-FORMATS     = ["png", "jpeg", "webp"]
+MODELS             = ["gpt-image-2", "dall-e-3"]
+QUALITIES_GPT      = ["auto", "low", "medium", "high"]
+QUALITIES_DALLE    = ["standard", "hd"]
+FORMATS            = ["png", "jpeg", "webp"]
 
 # ── Palette macOS ──────────────────────────────────────────────────────────────
 C = {
@@ -284,6 +286,7 @@ TR = {
         "prompt_heading":   "Prompt",
         "params_heading":   "Paramètres",
         "prompt_hint":      "Décrivez l'image à générer…",
+        "model_label":      "Modèle",
         "quality_label":    "Qualité",
         "format_label":     "Format",
         "quality_tip":      "low = rapide/économique · medium = équilibré · high = meilleure qualité",
@@ -322,6 +325,7 @@ TR = {
         "prompt_heading":   "Prompt",
         "params_heading":   "Parameters",
         "prompt_hint":      "Describe the image to generate…",
+        "model_label":      "Model",
         "quality_label":    "Quality",
         "format_label":     "Format",
         "quality_tip":      "low = fast/cheap · medium = balanced · high = best quality",
@@ -389,17 +393,30 @@ class GenerateWorker(QThread):
         try:
             from openai import OpenAI
             client = OpenAI(api_key=self.api_key)
-            kwargs: dict = {
-                "model":         "gpt-image-2",
-                "prompt":        self.prompt,
-                "n":             1,
-                "output_format": self.params["fmt"],
-            }
-            if self.params["quality"] != "auto": kwargs["quality"] = self.params["quality"]
+            model = self.params["model"]
 
-            response = client.images.generate(**kwargs)
-            data = base64.b64decode(response.data[0].b64_json)
-            self.success.emit(data, self.params["fmt"])
+            if model == "dall-e-3":
+                response = client.images.generate(
+                    model="dall-e-3",
+                    prompt=self.prompt,
+                    n=1,
+                    quality=self.params["quality"],
+                    response_format="b64_json",
+                )
+                data = base64.b64decode(response.data[0].b64_json)
+                self.success.emit(data, "png")
+            else:
+                kwargs: dict = {
+                    "model":         "gpt-image-2",
+                    "prompt":        self.prompt,
+                    "n":             1,
+                    "output_format": self.params["fmt"],
+                }
+                if self.params["quality"] != "auto":
+                    kwargs["quality"] = self.params["quality"]
+                response = client.images.generate(**kwargs)
+                data = base64.b64decode(response.data[0].b64_json)
+                self.success.emit(data, self.params["fmt"])
         except Exception as exc:
             self.error.emit(str(exc))
 
@@ -740,25 +757,30 @@ class MainWindow(QMainWindow):
         grid.setHorizontalSpacing(12)
         grid.setContentsMargins(0, 0, 0, 0)
 
+        self._model_lbl   = QLabel()
         self._quality_lbl = QLabel()
         self._format_lbl  = QLabel()
 
-        for lbl in (self._quality_lbl, self._format_lbl):
+        for lbl in (self._model_lbl, self._quality_lbl, self._format_lbl):
             lbl.setStyleSheet(f"color: {C['text']}; font-size: 13px;")
             lbl.setMinimumWidth(80)
 
-        self._quality_cb = QComboBox(); self._quality_cb.addItems(QUALITIES)
+        self._model_cb   = QComboBox(); self._model_cb.addItems(MODELS)
+        self._quality_cb = QComboBox(); self._quality_cb.addItems(QUALITIES_GPT)
         self._format_cb  = QComboBox(); self._format_cb.addItems(FORMATS)
 
-        for cb in (self._quality_cb, self._format_cb):
+        for cb in (self._model_cb, self._quality_cb, self._format_cb):
             cb.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
         for i, (lbl, cb) in enumerate([
+            (self._model_lbl,   self._model_cb),
             (self._quality_lbl, self._quality_cb),
             (self._format_lbl,  self._format_cb),
         ]):
             grid.addWidget(lbl, i, 0)
             grid.addWidget(cb,  i, 1)
+
+        self._model_cb.currentTextChanged.connect(self._on_model_changed)
 
         grid.setColumnStretch(1, 1)
         parent.addLayout(grid)
@@ -798,6 +820,7 @@ class MainWindow(QMainWindow):
         self._prompt_lbl.setText(t["prompt_heading"].upper())
         self._params_lbl.setText(t["params_heading"].upper())
         self._prompt.setPlaceholderText(t["prompt_hint"])
+        self._model_lbl.setText(t["model_label"])
         self._quality_lbl.setText(t["quality_label"])
         self._format_lbl.setText(t["format_label"])
         for lbl, tip_key in [
@@ -822,6 +845,15 @@ class MainWindow(QMainWindow):
         self._key_btn.style().polish(self._key_btn)
         self._key_btn.setText(t["key_ok"] if has_key else t["key_missing"])
         self._key_btn.setToolTip(t["key_ok_tip"] if has_key else t["key_missing_tip"])
+
+    def _on_model_changed(self, model: str):
+        is_dalle = model == "dall-e-3"
+        self._quality_cb.blockSignals(True)
+        self._quality_cb.clear()
+        self._quality_cb.addItems(QUALITIES_DALLE if is_dalle else QUALITIES_GPT)
+        self._quality_cb.blockSignals(False)
+        self._format_lbl.setVisible(not is_dalle)
+        self._format_cb.setVisible(not is_dalle)
 
     def _on_toggle_lang(self):
         self._lang = "en" if self._lang == "fr" else "fr"
@@ -852,6 +884,7 @@ class MainWindow(QMainWindow):
             return
 
         params = {
+            "model":   self._model_cb.currentText(),
             "quality": self._quality_cb.currentText(),
             "fmt":     self._format_cb.currentText(),
         }
@@ -895,6 +928,8 @@ class MainWindow(QMainWindow):
         self._prompt.clear()
         self._image_view.set_placeholder(self._t("placeholder"))
         self._image_data = None
+        self._model_cb.setCurrentIndex(0)
+        self._on_model_changed("gpt-image-2")
         for cb in (self._quality_cb, self._format_cb):
             cb.setCurrentIndex(0)
         self._save_btn.setEnabled(False)
