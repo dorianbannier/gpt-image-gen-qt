@@ -1,6 +1,8 @@
 # GPT Image Generator
 
-A cross-platform image generation app powered by the OpenAI API (`gpt-image-2`), built with PyQt6 and designed to run on **Windows and Linux** (macOS build available but untested).
+A free, open-source desktop app to generate images using the **OpenAI gpt-image-2 API** — no subscription required, just your API key.
+
+Built with PyQt6, runs on **Windows and Linux** (macOS build available but untested).
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python&logoColor=white)
 ![PyQt6](https://img.shields.io/badge/PyQt6-6.5+-green?logo=qt&logoColor=white)
@@ -9,20 +11,33 @@ A cross-platform image generation app powered by the OpenAI API (`gpt-image-2`),
 
 ---
 
-## Features
+## What is this?
 
-- **Image generation** from a text prompt using `gpt-image-2`
-- **Adjustable parameters**: size, quality, format (PNG / JPEG / WebP), background (transparent / opaque)
-- **Save** the generated image in the chosen format
-- **API key** stored locally (`~/.config/gpt-image-gen/config.json`), never shared
-- **Bilingual interface** — English by default, French available via the toolbar toggle
-- **macOS-inspired design**: clean light theme modelled after native Apple applications
+GPT Image Generator is a lightweight desktop application that lets you generate images from text prompts using [OpenAI's gpt-image-2 model](https://platform.openai.com/docs/guides/images). It provides a clean, native-feeling interface without requiring a browser or a monthly subscription — you only pay for what you generate via the OpenAI API.
+
+**Ideal for:**
+- Anyone who wants to use gpt-image-2 without the OpenAI web interface
+- Designers and creatives who generate images as part of their workflow
+- Developers testing prompts before integrating them into their apps
+- Users who want a simple, privacy-friendly alternative to Midjourney or Adobe Firefly
 
 ---
 
 ## Screenshot
 
 ![App preview](screenshots/apercu.png)
+
+---
+
+## Features
+
+- **Text-to-image generation** using OpenAI `gpt-image-2`
+- **Quality and format control**: low / medium / high quality, PNG / JPEG / WebP output
+- **One-click save** of the generated image
+- **API key stored locally** (`~/.config/gpt-image-gen/config.json`) — never sent anywhere else
+- **Bilingual**: English by default, French available via toolbar toggle
+- **macOS-inspired UI**: clean light theme, native feel on any platform
+- **No subscription** — pay-per-use via your OpenAI API key
 
 ---
 
@@ -61,12 +76,13 @@ python app.py
 
 ---
 
-## Configuration
+## Getting an OpenAI API Key
 
-On first launch, click **API Key…** in the toolbar and enter your OpenAI key.  
-The key is saved locally and never transmitted anywhere.
+1. Go to [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+2. Create a new secret key
+3. On first launch, click **API Key…** in the toolbar and paste your key
 
-You can get a key at [platform.openai.com/api-keys](https://platform.openai.com/api-keys).
+Your key is saved locally and never transmitted to anyone other than OpenAI.
 
 ---
 
@@ -79,13 +95,23 @@ You can get a key at [platform.openai.com/api-keys](https://platform.openai.com/
 
 ---
 
+## Why gpt-image-2?
+
+`gpt-image-2` is OpenAI's latest image generation model. Compared to DALL-E 3, it offers:
+- Better prompt adherence
+- Higher quality output at lower cost
+- Support for transparent backgrounds (PNG/WebP)
+- Pay-per-image pricing with no monthly commitment
+
+---
+
 ## Windows Build (developers)
 
-The GitHub Actions workflow automatically generates a `.exe` on every push to `main`.
+The GitHub Actions workflow automatically builds a `.exe` and a macOS `.app` on every push to `main`.
 
-To trigger it manually: **Actions → Build Windows .exe → Run workflow**
+To trigger manually: **Actions → Build → Run workflow**
 
-The build uses [PyInstaller](https://pyinstaller.org/) in single-file mode (`--onefile`).
+Uses [PyInstaller](https://pyinstaller.org/) in single-file mode.
 
 ---
 
@@ -93,7 +119,7 @@ The build uses [PyInstaller](https://pyinstaller.org/) in single-file mode (`--o
 
 - [PyQt6](https://pypi.org/project/PyQt6/) — cross-platform GUI framework
 - [openai](https://pypi.org/project/openai/) — official OpenAI Python client
-- [PyInstaller](https://pyinstaller.org/) — Windows packaging
+- [PyInstaller](https://pyinstaller.org/) — Windows & macOS packaging
 - [GitHub Actions](https://github.com/features/actions) — CI/CD
 
 ---
