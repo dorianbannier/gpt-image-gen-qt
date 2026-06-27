@@ -17,10 +17,8 @@ from PyQt6.QtWidgets import QGraphicsDropShadowEffect
 CONFIG_DIR  = Path.home() / ".config" / "gpt-image-gen"
 CONFIG_FILE = CONFIG_DIR / "config.json"
 
-SIZES       = ["auto", "1024x1024", "1536x1024", "1024x1536"]
 QUALITIES   = ["auto", "low", "medium", "high"]
 FORMATS     = ["png", "jpeg", "webp"]
-BACKGROUNDS = ["auto", "transparent", "opaque"]
 
 # ── Palette macOS ──────────────────────────────────────────────────────────────
 C = {
@@ -286,14 +284,10 @@ TR = {
         "prompt_heading":   "Prompt",
         "params_heading":   "Paramètres",
         "prompt_hint":      "Décrivez l'image à générer…",
-        "size_label":       "Taille",
         "quality_label":    "Qualité",
         "format_label":     "Format",
-        "bg_label":         "Fond",
-        "size_tip":         "auto = le modèle choisit · 1536×1024 = paysage · 1024×1536 = portrait",
         "quality_tip":      "low = rapide/économique · medium = équilibré · high = meilleure qualité",
         "format_tip":       "png = sans perte · jpeg = compression · webp = moderne",
-        "bg_tip":           "transparent = canal alpha (png/webp uniquement)",
         "generate":         "Générer l'image",
         "generating":       "Génération en cours…",
         "save":             "Sauvegarder…",
@@ -328,14 +322,10 @@ TR = {
         "prompt_heading":   "Prompt",
         "params_heading":   "Parameters",
         "prompt_hint":      "Describe the image to generate…",
-        "size_label":       "Size",
         "quality_label":    "Quality",
         "format_label":     "Format",
-        "bg_label":         "Background",
-        "size_tip":         "auto = model decides · 1536×1024 = landscape · 1024×1536 = portrait",
         "quality_tip":      "low = fast/cheap · medium = balanced · high = best quality",
         "format_tip":       "png = lossless · jpeg = compressed · webp = modern",
-        "bg_tip":           "transparent = alpha channel (png/webp only)",
         "generate":         "Generate Image",
         "generating":       "Generating…",
         "save":             "Save…",
@@ -405,9 +395,7 @@ class GenerateWorker(QThread):
                 "n":             1,
                 "output_format": self.params["fmt"],
             }
-            if self.params["size"]       != "auto": kwargs["size"]       = self.params["size"]
-            if self.params["quality"]    != "auto": kwargs["quality"]    = self.params["quality"]
-            if self.params["background"] != "auto": kwargs["background"] = self.params["background"]
+            if self.params["quality"] != "auto": kwargs["quality"] = self.params["quality"]
 
             response = client.images.generate(**kwargs)
             data = base64.b64decode(response.data[0].b64_json)
@@ -591,7 +579,7 @@ class MainWindow(QMainWindow):
         self._image_data: bytes | None = None
         self._image_fmt:  str          = "png"
         self._config = self._load_config()
-        self._lang   = self._config.get("lang", "fr")
+        self._lang   = self._config.get("lang", "en")
         self._worker = None
 
         self._build_ui()
@@ -752,28 +740,22 @@ class MainWindow(QMainWindow):
         grid.setHorizontalSpacing(12)
         grid.setContentsMargins(0, 0, 0, 0)
 
-        self._size_lbl    = QLabel()
         self._quality_lbl = QLabel()
         self._format_lbl  = QLabel()
-        self._bg_lbl      = QLabel()
 
-        for lbl in (self._size_lbl, self._quality_lbl, self._format_lbl, self._bg_lbl):
+        for lbl in (self._quality_lbl, self._format_lbl):
             lbl.setStyleSheet(f"color: {C['text']}; font-size: 13px;")
             lbl.setMinimumWidth(80)
 
-        self._size_cb    = QComboBox(); self._size_cb.addItems(SIZES)
         self._quality_cb = QComboBox(); self._quality_cb.addItems(QUALITIES)
         self._format_cb  = QComboBox(); self._format_cb.addItems(FORMATS)
-        self._bg_cb      = QComboBox(); self._bg_cb.addItems(BACKGROUNDS)
 
-        for cb in (self._size_cb, self._quality_cb, self._format_cb, self._bg_cb):
+        for cb in (self._quality_cb, self._format_cb):
             cb.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
         for i, (lbl, cb) in enumerate([
-            (self._size_lbl, self._size_cb),
             (self._quality_lbl, self._quality_cb),
-            (self._format_lbl, self._format_cb),
-            (self._bg_lbl, self._bg_cb),
+            (self._format_lbl,  self._format_cb),
         ]):
             grid.addWidget(lbl, i, 0)
             grid.addWidget(cb,  i, 1)
@@ -816,19 +798,13 @@ class MainWindow(QMainWindow):
         self._prompt_lbl.setText(t["prompt_heading"].upper())
         self._params_lbl.setText(t["params_heading"].upper())
         self._prompt.setPlaceholderText(t["prompt_hint"])
-        self._size_lbl.setText(t["size_label"])
         self._quality_lbl.setText(t["quality_label"])
         self._format_lbl.setText(t["format_label"])
-        self._bg_lbl.setText(t["bg_label"])
         for lbl, tip_key in [
-            (self._size_lbl,    "size_tip"),
             (self._quality_lbl, "quality_tip"),
             (self._format_lbl,  "format_tip"),
-            (self._bg_lbl,      "bg_tip"),
-            (self._size_cb,     "size_tip"),
             (self._quality_cb,  "quality_tip"),
             (self._format_cb,   "format_tip"),
-            (self._bg_cb,       "bg_tip"),
         ]:
             lbl.setToolTip(t[tip_key])
         is_busy = not self._gen_btn.isEnabled()
@@ -876,10 +852,8 @@ class MainWindow(QMainWindow):
             return
 
         params = {
-            "size":       self._size_cb.currentText(),
-            "quality":    self._quality_cb.currentText(),
-            "fmt":        self._format_cb.currentText(),
-            "background": self._bg_cb.currentText(),
+            "quality": self._quality_cb.currentText(),
+            "fmt":     self._format_cb.currentText(),
         }
         self._set_busy(True)
         self._show_status(self._t("gen_progress"))
@@ -921,7 +895,7 @@ class MainWindow(QMainWindow):
         self._prompt.clear()
         self._image_view.set_placeholder(self._t("placeholder"))
         self._image_data = None
-        for cb in (self._size_cb, self._quality_cb, self._format_cb, self._bg_cb):
+        for cb in (self._quality_cb, self._format_cb):
             cb.setCurrentIndex(0)
         self._save_btn.setEnabled(False)
         self._show_status("")
