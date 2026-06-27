@@ -125,9 +125,9 @@ Uses [PyInstaller](https://pyinstaller.org/) in single-file mode.
 
 ---
 
-## MCP Server (Claude Code integration)
+## MCP Server
 
-The project includes an MCP server (`mcp_server.py`) that exposes the image generation as a tool directly inside Claude Code — no browser, no copy-paste.
+The project includes an MCP server (`mcp_server.py`) that exposes image generation as a tool for any [MCP-compatible client](https://modelcontextprotocol.io) — Claude Code, Claude Desktop, Cursor, Zed, Continue, and others.
 
 ### Setup
 
@@ -137,7 +137,7 @@ The project includes an MCP server (`mcp_server.py`) that exposes the image gene
 pip install mcp openai
 ```
 
-**2. Register the server** in `~/.claude/settings.json`:
+**2. Register the server** in your MCP client's config file:
 
 ```json
 {
@@ -150,13 +150,18 @@ pip install mcp openai
 }
 ```
 
-**3. Restart Claude Code** — it will detect the new server automatically.
+Common config file locations:
+- **Claude Code**: `~/.claude/settings.json`
+- **Claude Desktop**: `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows)
+- **Cursor / Zed / Continue**: see your client's MCP documentation
+
+**3. Restart your client** — it will detect the server automatically.
 
 > The API key is read from `~/.config/gpt-image-gen/config.json` (the same file used by the desktop app). Set it once in the app, and the MCP server picks it up with no extra configuration.
 
 ### Usage
 
-Once connected, just ask Claude to generate an image:
+Once connected, ask your AI assistant to generate an image:
 
 ```
 Generate an image of a fox in a snowy forest, high quality
