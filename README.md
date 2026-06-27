@@ -1,28 +1,28 @@
 # GPT Image Generator
 
-Application de génération d'images via l'API OpenAI (`gpt-image-2`), construite avec PyQt6 pour fonctionner sur **Windows, macOS et Linux**.
+A cross-platform image generation app powered by the OpenAI API (`gpt-image-2`), built with PyQt6 and designed to run on **Windows, macOS and Linux**.
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python&logoColor=white)
 ![PyQt6](https://img.shields.io/badge/PyQt6-6.5+-green?logo=qt&logoColor=white)
 ![OpenAI](https://img.shields.io/badge/OpenAI-gpt--image--2-412991?logo=openai&logoColor=white)
-![License](https://img.shields.io/badge/licence-MIT-orange)
+![License](https://img.shields.io/badge/license-MIT-orange)
 
 ---
 
-## Fonctionnalités
+## Features
 
-- **Génération d'images** à partir d'un prompt texte via `gpt-image-2`
-- **Paramètres ajustables** : taille, qualité, format (PNG / JPEG / WebP), fond (transparent / opaque)
-- **Sauvegarde** de l'image générée dans le format choisi
-- **Clé API** stockée localement (`~/.config/gpt-image-gen/config.json`), jamais transmise ailleurs
-- **Interface bilingue** français / anglais, mémorisée entre les sessions
-- **Look macOS** : thème clair inspiré des applications native Apple
+- **Image generation** from a text prompt using `gpt-image-2`
+- **Adjustable parameters**: size, quality, format (PNG / JPEG / WebP), background (transparent / opaque)
+- **Save** the generated image in the chosen format
+- **API key** stored locally (`~/.config/gpt-image-gen/config.json`), never shared
+- **Bilingual interface** — French / English, preference saved between sessions
+- **macOS-inspired design**: clean light theme modelled after native Apple applications
 
 ---
 
-## Captures d'écran
+## Screenshot
 
-![Aperçu de l'application](screenshots/apercu.png)
+![App preview](screenshots/apercu.png)
 
 ---
 
@@ -30,13 +30,13 @@ Application de génération d'images via l'API OpenAI (`gpt-image-2`), construit
 
 ### Windows
 
-Télécharge le dernier `.exe` depuis la page [Releases](../../releases) ou l'onglet [Actions](../../actions) → dernier build réussi → **Artifacts**.
+Download the latest `.exe` from the [Releases](../../releases) page or the [Actions](../../actions) tab → latest successful build → **Artifacts**.
 
-Aucune installation requise, double-clique sur `GPT-Image-Generator.exe`.
+No installation required — just double-click `GPT-Image-Generator.exe`.
 
 ### Linux / macOS
 
-**Prérequis** : Python 3.11+
+**Requirements**: Python 3.11+
 
 ```bash
 git clone https://github.com/dorianbannier/gpt-image-gen-qt.git
@@ -44,9 +44,9 @@ cd gpt-image-gen-qt
 ./run.sh
 ```
 
-`run.sh` crée automatiquement un environnement virtuel et installe les dépendances au premier lancement.
+`run.sh` automatically creates a virtual environment and installs dependencies on first run.
 
-### Installation manuelle des dépendances
+### Manual dependency install
 
 ```bash
 pip install PyQt6 openai
@@ -57,43 +57,43 @@ python app.py
 
 ## Configuration
 
-Au premier lancement, clique sur **Clé API…** dans la barre d'outils et entre ta clé OpenAI.  
-La clé est sauvegardée localement et n'est jamais partagée.
+On first launch, click **API Key…** in the toolbar and enter your OpenAI key.  
+The key is saved locally and never transmitted anywhere.
 
-Tu peux obtenir une clé sur [platform.openai.com/api-keys](https://platform.openai.com/api-keys).
+You can get a key at [platform.openai.com/api-keys](https://platform.openai.com/api-keys).
 
 ---
 
-## Paramètres de génération
+## Generation Parameters
 
-| Paramètre | Options | Description |
+| Parameter | Options | Description |
 |-----------|---------|-------------|
-| **Taille** | auto, 1024×1024, 1536×1024, 1024×1536 | Résolution de l'image |
-| **Qualité** | auto, low, medium, high | Rapport vitesse / qualité |
-| **Format** | PNG, JPEG, WebP | Format du fichier de sortie |
-| **Fond** | auto, transparent, opaque | Canal alpha (PNG/WebP uniquement) |
+| **Size** | auto, 1024×1024, 1536×1024, 1024×1536 | Output image resolution |
+| **Quality** | auto, low, medium, high | Speed / quality trade-off |
+| **Format** | PNG, JPEG, WebP | Output file format |
+| **Background** | auto, transparent, opaque | Alpha channel (PNG/WebP only) |
 
 ---
 
-## Build Windows (développeurs)
+## Windows Build (developers)
 
-Le workflow GitHub Actions génère automatiquement un `.exe` à chaque push sur `main`.
+The GitHub Actions workflow automatically generates a `.exe` on every push to `main`.
 
-Pour le lancer manuellement : **Actions → Build Windows .exe → Run workflow**
+To trigger it manually: **Actions → Build Windows .exe → Run workflow**
 
-Le build utilise [PyInstaller](https://pyinstaller.org/) en mode single-file (`--onefile`).
+The build uses [PyInstaller](https://pyinstaller.org/) in single-file mode (`--onefile`).
 
 ---
 
-## Stack technique
+## Tech Stack
 
-- [PyQt6](https://pypi.org/project/PyQt6/) — interface graphique multiplateforme
-- [openai](https://pypi.org/project/openai/) — client officiel OpenAI
-- [PyInstaller](https://pyinstaller.org/) — packaging Windows
+- [PyQt6](https://pypi.org/project/PyQt6/) — cross-platform GUI framework
+- [openai](https://pypi.org/project/openai/) — official OpenAI Python client
+- [PyInstaller](https://pyinstaller.org/) — Windows packaging
 - [GitHub Actions](https://github.com/features/actions) — CI/CD
 
 ---
 
-## Licence
+## License
 
-MIT — libre d'utilisation, modification et distribution.
+MIT — free to use, modify and distribute.
